@@ -236,7 +236,128 @@ print(result)
 
 通过@href就获取到了该节点的href属性值，当然，它们都是以列表的形式返回。
 
-## 多个属性值的匹配
+## 属性多值的匹配
+
+在编写前端代码的时候，有些节点为了方便可能就会存在多个值，那么就要使用contains函数了，例如：
+
+```python
+from lxml import etree
+
+text = '''
+<li class="li li-first"><a href="link.html">first item</a></li>
+
+'''
+html = etree.HTML(text)
+result = html.xpath('//li[contains(@class, "li")]/a/text()')
+print(result)
+
+```
 
 
 
+要是你说我怎么记得住这些函数，那好，还可以这样写。
+
+具体代码示例如下：
+
+```python
+from lxml import etree
+
+text = '''
+<li class="li li-first"><a href="link.html">first item</a></li>
+
+'''
+html = etree.HTML(text)
+result = html.xpath('//li[@class="li li-first"]/a/text()')
+print(result)
+```
+
+看出区别了吗？
+
+运行上面的两段代码，你会发现结果是一样的。
+
+## 多属性匹配
+
+另外，我们写写爬虫的时候会遇到另一种情况，那就是在一个标签内存在多个属性。那此时可以用and操作符来连接
+
+具体代码示例如下所示：
+
+```python
+from lxml import etree
+
+text = '''
+<li class="li li-first" name="item"><a href="link.html">first item</a></li>
+
+'''
+html = etree.HTML(text)
+result = html.xpath('//li[contains(@class, "li") and @name="item"]/a/text()')
+print(result)
+```
+
+## xpath运算符的简单介绍
+
+从上面的示例你应该知道了，and是xpath的运算符，xpath的运算符也是比较多的，那么接下来对xpath运算符做简单的介绍。
+
+| 运算符 |                       描述                        |
+| :----: | :-----------------------------------------------: |
+|   or   |                        或                         |
+|  and   |                        与                         |
+|   \|   | 计算两个节点集，//li \| //a 获取li和a元素的节点集 |
+|   +    |                       加法                        |
+|   -    |                       减法                        |
+|   *    |                       乘法                        |
+|  div   |                       除法                        |
+|   =    |                       等于                        |
+|   !=   |                      不等于                       |
+|   <    |                       小于                        |
+|   >    |                       大于                        |
+|   >=   |                     大于等于                      |
+|   <=   |                     小于等于                      |
+|  mod   |                     计算余数                      |
+
+## 按序选择
+
+有时候，我们编写爬虫的时候可能会匹配到几个相同的 li 节点，但是，我只需要第一个或者最后一个就可以了。那这时该怎么样处理那？
+
+这时可以通过索引的方式，传入指定的索引，获取指定节点。
+
+具体代码示例如下所示：
+
+```python
+from lxml import etree
+
+text = '''
+<div>
+    <ul>
+        <li class="item-0"><a href="link1.html">first-item</a></li>
+        <li class="item-1"><a href="link2.html"></a>second-item</li>
+        <li class="item-inactive"><a href="link3.html">third-item</a></li>
+        <li class="item-1"><a href="link4.html">fourth-item</a></li>
+        <li class="item-0"><a href="link5.html">fifith-item</a></li>
+    </ul>
+
+</div>
+'''
+html = etree.HTML(text)
+# 获取第一个li节点
+result = html.xpath('//li[1]/a/text()')
+print(result)
+# 获取最后一个li节点
+result = html.xpath('//li[last()]/a/text()')
+print(result)
+# 获取位置小于3的li节点
+result = html.xpath('//li[position()<3]/a/text()')
+print(result)
+# 获取倒数第三个li节点
+result = html.xpath('//li[last()-2]/a/text()')
+print(result)
+```
+
+
+
+# 最后
+
+今天是2020的最后一天，希望各位小伙伴可以挣到更多的钱，没有脱单的小伙伴抓紧脱单，找到你的另一半，陪你共度一生。
+
+**路漫漫其修远兮，吾将上下而求索**。
+
+我是**啃书君**，一个专注于学习的人，**你懂的越多，你不懂的越多**。更多精彩内容我们下期再见！
